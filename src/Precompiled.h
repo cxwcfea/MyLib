@@ -9,13 +9,18 @@
 #define CXWCFEA_PRECOMPILED_H_
 
 #include <cstdio>
+#include <cstdint>
 #include <cassert>
 #include <iostream>
+#include <string>
 #include <algorithm>
 #include <utility>
 #include <vector>
+#include <type_traits>
 
 #define ASSERT assert
+
+using std::string;
 
 static const int BUF_SIZE = 256;
 
