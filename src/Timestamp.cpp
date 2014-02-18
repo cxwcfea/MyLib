@@ -6,7 +6,7 @@
  */
 
 #include <cinttypes>
-#include <ctime>
+#include <sys/time.h>
 #include "Timestamp.h"
 
 namespace cxwcfea {
@@ -39,6 +39,16 @@ string Timestamp::toFormattedString() {
 			result.tm_hour, result.tm_min, result.tm_sec, microseconds);
 
 	return buf;
+}
+
+Timestamp Timestamp::now() {
+	struct timeval result;
+	gettimeofday(&result, nullptr);
+	return Timestamp(result.tv_sec * kMicroSecondsPerSecond + result.tv_usec);
+}
+
+Timestamp Timestamp::invalid() {
+	return Timestamp();
 }
 
 Timestamp::~Timestamp() {
