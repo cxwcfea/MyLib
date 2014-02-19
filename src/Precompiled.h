@@ -11,6 +11,7 @@
 #include <cstdio>
 #include <cstdint>
 #include <cassert>
+#include <cerrno>
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -22,11 +23,11 @@
 
 using std::string;
 
-static const int BUF_SIZE = 256;
-
 struct Tracer {
 	const char *file_name_;
 	unsigned line_num_;
+
+	static const int BUF_SIZE = 256;
 
 	Tracer(const char *file_name, unsigned line_num) :
 			file_name_(file_name), line_num_(line_num) {

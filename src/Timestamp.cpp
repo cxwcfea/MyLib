@@ -11,7 +11,7 @@
 
 namespace cxwcfea {
 
-static_assert(sizeof(Timestamp) == sizeof(int64_t), "Timestamp size not equal to 64bit");
+static_assert(sizeof(Timestamp) == sizeof(int64_t), "Timestamp size not equal to 8 byte");
 
 Timestamp::Timestamp(int64_t microseconds) :
 		microsecondsSinceEpoch_(microseconds) {
