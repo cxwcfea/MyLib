@@ -1,5 +1,5 @@
 /*
- * ReadSmallFile.cpp
+ * FileUtil.cpp
  *
  *  Created on: Feb 18, 2014
  *      Author: xcheng
@@ -10,7 +10,7 @@
 #include <sys/uio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "ReadSmallFile.h"
+#include "FileUtil.h"
 
 namespace cxwcfea {
 

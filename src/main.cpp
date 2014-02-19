@@ -7,7 +7,7 @@
 
 #include "Precompiled.h"
 #include "Timestamp.h"
-#include "ReadSmallFile.h"
+#include "FileUtil.h"
 
 using namespace std;
 using namespace cxwcfea;

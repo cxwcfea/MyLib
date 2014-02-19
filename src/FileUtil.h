@@ -1,12 +1,12 @@
 /*
- * ReadSmallFile.h
+ * FileUtil.h
  *
  *  Created on: Feb 18, 2014
  *      Author: xcheng
  */
 
-#ifndef CXWCFEA_READSMALLFILE_H_
-#define CXWCFEA_READSMALLFILE_H_
+#ifndef CXWCFEA_FILEUTIL_H_
+#define CXWCFEA_FILEUTIL_H_
 
 #include "Precompiled.h"
 
@@ -42,4 +42,4 @@ auto readFile(string fileName, int maxSize, string *content, int64_t *fileSize =
 
 } /* namespace cxwcfea */
 
-#endif /* CXWCFEA_READSMALLFILE_H_ */
+#endif /* CXWCFEA_FILEUTIL_H_*/
