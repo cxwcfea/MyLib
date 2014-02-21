@@ -29,7 +29,8 @@ ReadSmallFile::~ReadSmallFile() {
 }
 
 auto ReadSmallFile::readToString(int maxSize, string* content,
-		int64_t* fileSize, int64_t* modifyTime, int64_t* createTime) noexcept -> int {
+		int64_t* fileSize, int64_t* modifyTime, int64_t* createTime)
+				noexcept -> int {
 	static_assert(sizeof(off_t) == 8, "off_t not equal to 8 byte");
 	ASSERT(content != nullptr);
 	ASSERT(maxSize >= 0);
@@ -43,7 +44,9 @@ auto ReadSmallFile::readToString(int maxSize, string* content,
 			if (fstat(fd_, &state) == 0) {
 				if (S_ISREG(state.st_mode)) {
 					*fileSize = state.st_size;
-					content->reserve(static_cast<string::size_type>(std::min(static_cast<int64_t>(maxSize), *fileSize)));
+					content->reserve(
+							static_cast<string::size_type>(std::min(
+									static_cast<int64_t>(maxSize), *fileSize)));
 				} else if (S_ISDIR(state.st_mode)) {
 					err = EISDIR;
 				}
@@ -94,6 +97,30 @@ auto readFile(string fileName, int maxSize, string *content, int64_t *fileSize,
 		int64_t *modifyTime, int64_t *createTime) noexcept -> int {
 	ReadSmallFile file(fileName);
 	return file.readToString(maxSize, content, fileSize, modifyTime, createTime);
+}
+
+AppendFile::AppendFile(string &fileName) :
+		fs_(fileName, std::ios::out | std::ios::app | std::ios::binary), writtenBytes_(0) {
+
+}
+
+AppendFile::~AppendFile() {
+
+}
+
+auto AppendFile::append(const char* logline, const size_t len) -> void {
+	if (fs_.is_open()) {
+		try {
+			fs_.write(logline, len);
+			writtenBytes_ += len;
+		} catch (const std::ios_base::failure &e) {
+			std::cerr << "AppendFile::append() failed " << e.code() << std::endl;
+		}
+	}
+}
+
+auto AppendFile::flush() -> void {
+	fs_.flush();
 }
 
 } /* namespace cxwcfea */

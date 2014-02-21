@@ -9,6 +9,7 @@
 #define CXWCFEA_FILEUTIL_H_
 
 #include "Precompiled.h"
+#include <fstream>
 
 namespace cxwcfea {
 
@@ -39,6 +40,27 @@ private:
 
 auto readFile(string fileName, int maxSize, string *content, int64_t *fileSize = nullptr,
 		int64_t *modifyTime = nullptr, int64_t *createTime = nullptr) noexcept -> int;
+
+class AppendFile {
+public:
+	AppendFile(string &fileName);
+	~AppendFile();
+
+	AppendFile(const AppendFile &) = delete;
+	auto operator=(const AppendFile &) -> AppendFile & = delete;
+
+	auto append(const char *logline, const size_t len) -> void;
+
+	auto flush() -> void;
+
+	auto writtenBytes() const noexcept -> int {
+		return writtenBytes_;
+	}
+
+private:
+	std::ofstream fs_;
+	int writtenBytes_;
+};
 
 } /* namespace cxwcfea */
 

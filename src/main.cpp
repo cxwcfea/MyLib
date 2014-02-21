@@ -8,6 +8,7 @@
 #include "Precompiled.h"
 #include "Timestamp.h"
 #include "FileUtil.h"
+#include "Date.h"
 
 using namespace std;
 using namespace cxwcfea;
@@ -28,7 +29,11 @@ int main(int argc, char **argv) {
 		cout << c << endl;
 		cout << "size:" << fileSize << " modifyTime:" << Timestamp(modifyTime*Timestamp::kMicroSecondsPerSecond).toFormattedString() << endl;
 	}
+	string fileName = "/Users/xcheng/test.txt";
+	AppendFile file_(fileName);
+	char buf[] = "ok, I am writing something";
+	file_.append(buf, sizeof(buf));
+	cout << "write " << file_.writtenBytes() << " bytes" << endl;
+	Date d { 1981, 8, 4 };
+	cout << d.toIsoString() << endl;
 }
-
-
-
