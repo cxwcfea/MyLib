@@ -24,13 +24,22 @@ public:
 	static constexpr int kDaysPerWeek = 7;
 	static const int kJulianDayOf1970_01_01;
 
-	Date() :
-			julianDayNumber_(0) {
+	Date(Date &&other) :
+			julianDayNumber_(other.julianDayNumber_) {
+	}
+
+	auto operator=(Date &&other) noexcept -> Date & {
+		julianDayNumber_ = other.julianDayNumber_;
+		return *this;
+	}
+
+	auto swap(Date &other) -> void {
+		std::swap(julianDayNumber_, other.julianDayNumber_);
 	}
 
 	Date(int year, int month, int day);
 
-	explicit Date(int julianDayNumber) :
+	explicit Date(int julianDayNumber = 0) :
 			julianDayNumber_(julianDayNumber) {
 	}
 
@@ -66,8 +75,11 @@ public:
 
 private:
 	int julianDayNumber_;
+};
+
+inline auto swap(Date &d1, Date &d2) noexcept -> void {
+	d1.swap(d2);
 }
-;
 
 } /* namespace cxwcfea */
 
