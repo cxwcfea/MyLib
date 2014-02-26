@@ -9,9 +9,13 @@
 #include "Timestamp.h"
 #include "FileUtil.h"
 #include "Date.h"
+#include "Exception.h"
+#include "Thread.h"
 
 using namespace std;
 using namespace cxwcfea;
+
+class Incomplete;
 
 struct MoveTest {
 	int a;
@@ -28,6 +32,22 @@ public:
 		return *this;
 	}
 };
+
+auto badFunc() -> void {
+	try {
+		cout << "throw" << endl;
+		throw Exception("test");
+	} catch (const Exception &ex) {
+		cout << "Exception:" << endl;
+		cout << "what:" << ex.what() << endl;
+		cout << "stack trace:" << ex.stackTrace() << endl;
+	}
+}
+
+auto threadFunc() -> void {
+	cout << "running in Thread:" << CurrentThread::t_tidString << endl;
+	cout << "end" << endl;
+}
 
 int main(int argc, char **argv) {
 	auto a = 9;
@@ -67,4 +87,9 @@ int main(int argc, char **argv) {
 	std::reverse(begin(dateV), end(dateV));
 	MoveTest mt;
 	MoveTest mt2(std::move(mt));
+//	badFunc();
+	Thread thread1(threadFunc, "thread1");
+	thread1.start();
+	thread1.join();
+	cout << CurrentThread::t_tidString << " end" << endl;
 }

@@ -17,11 +17,15 @@
 #include <algorithm>
 #include <utility>
 #include <vector>
+#include <memory>
 #include <type_traits>
 
 #define ASSERT assert
 
 using std::string;
+using std::shared_ptr;
+using std::unique_ptr;
+using std::weak_ptr;
 
 struct Tracer {
 	const char *file_name_;
