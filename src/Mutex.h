@@ -17,22 +17,22 @@ class Mutex {
 	pthread_mutex_t mutex_;
 public:
 	Mutex() {
-		VERIFY(pthread_mutex_init(&mutex_, nullptr));
+		VERIFY(pthread_mutex_init(&mutex_, nullptr) == 0);
 	}
 
 	Mutex(const Mutex &) = delete;
 	auto operator=(const Mutex &) -> Mutex & = delete;
 
 	~Mutex() {
-		VERIFY(pthread_mutex_destroy(&mutex_));
+		VERIFY(pthread_mutex_destroy(&mutex_) == 0);
 	}
 
 	auto lock() noexcept -> void {
-		VERIFY(pthread_mutex_lock(&mutex_));
+		VERIFY(pthread_mutex_lock(&mutex_) == 0);
 	}
 
 	auto unlock() noexcept -> void {
-		VERIFY(pthread_mutex_unlock(&mutex_));
+		VERIFY(pthread_mutex_unlock(&mutex_) == 0);
 	}
 
 	auto getPthreadMutex() noexcept -> pthread_mutex_t * {

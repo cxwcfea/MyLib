@@ -14,6 +14,7 @@
 #include "Timestamp.h"
 #include "Thread.h"
 #include "Exception.h"
+#include "Logging.h"
 
 namespace cxwcfea {
 
@@ -155,7 +156,7 @@ auto Thread::start() -> void {
 		started_ = false;
 		delete data;
 		//TODO: use log func
-		TRACE("Failed in pthread_create");
+		LOG_SYSFATAL << "Failed in pthread_create";
 	}
 }
 

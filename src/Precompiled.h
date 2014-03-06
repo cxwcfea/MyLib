@@ -9,6 +9,7 @@
 #define CXWCFEA_PRECOMPILED_H_
 
 #include <cstdio>
+#include <cstdlib>
 #include <cstdint>
 #include <cassert>
 #include <cerrno>
@@ -52,10 +53,10 @@ struct Tracer {
 
 #ifdef NDEBUG
 #define VERIFY(expression) (expression)
-#define TRACE
+#define TRACEOUT
 #else
 #define VERIFY ASSERT
-#define TRACE Tracer(__FILE__, __LINE__)
+#define TRACEOUT Tracer(__FILE__, __LINE__)
 #endif
 
 template<class T, class ... Ts>

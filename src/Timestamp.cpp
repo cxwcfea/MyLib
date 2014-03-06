@@ -34,7 +34,7 @@ string Timestamp::toFormattedString() {
 	std::tm result;
 	gmtime_r(&seconds, &result);
 
-	snprintf(buf, sizeof(buf), "%04d%02d%02d %02d:%02d:%02d:.%06" PRId64,
+	snprintf(buf, sizeof(buf), "%04d%02d%02d %02d:%02d:%02d.%06" PRId64,
 			result.tm_year + 1900, result.tm_mon + 1, result.tm_mday,
 			result.tm_hour, result.tm_min, result.tm_sec, microseconds);
 
