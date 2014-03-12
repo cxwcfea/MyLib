@@ -15,6 +15,10 @@
 #include "ProcessInfo.h"
 #include "LogFile.h"
 #include "Logging.h"
+#include "AsyncLogging.h"
+#ifdef __MACH__
+#include <libgen.h>  // basename()
+#endif
 
 using namespace std;
 using namespace cxwcfea;
@@ -22,28 +26,37 @@ using namespace cxwcfea;
 class Incomplete;
 
 class MyClass {
+	static int time;
+	int a;
 public:
 	MyClass() {
-		cout << "constructor" << endl;
+		a = ++time;
+		cout << "MyClass constructor " << a << endl;
 	}
 	~MyClass() {
-		cout << "destructor" << endl;
+		cout << "MyClass destructor " << a << endl;
 	}
 	MyClass(const MyClass &other) {
-		cout << "copy constructor" << endl;
+		a = ++time;
+		cout << "MyClass copy constructor" << a << endl;
 	}
 	MyClass &operator=(const MyClass &other) {
-		cout << "copy assignment" << endl;
+		a = ++time;
+		cout << "MyClass copy assignment" << a << endl;
 		return *this;
 	}
 	MyClass(MyClass &&other) {
-		cout << "move constructor" << endl;
+		a = other.a;
+		cout << "MyClass move constructor" << a << endl;
 	}
 	MyClass &operator=(MyClass &&other) {
-		cout << "move assignment" << endl;
+		a = other.a;
+		cout << "MyClass move assignment" << a << endl;
 		return *this;
 	}
 };
+
+int MyClass::time = 0;
 
 MyClass getMyClass(int value) {
 	if (value == 1) {
@@ -74,8 +87,10 @@ public:
 
 struct MoveTest {
 	int a;
+	//shared_ptr<char> buf;
 public:
-	MoveTest() = default;
+	MoveTest() : a(0) {
+	}
 	MoveTest(const MoveTest &) = delete;
 	MoveTest &operator=(const MoveTest &) = delete;
 
@@ -85,6 +100,13 @@ public:
 	MoveTest &operator=(MoveTest &&other) {
 		a = other.a;
 		return *this;
+	}
+	auto push(char c) -> void {
+	//	buf[a++] = c;
+	}
+	auto print() -> void {
+	//	for_each(begin(buf), end(buf), [](char e) { cout << e << ' '; });
+	//	cout << endl;
 	}
 };
 
@@ -119,6 +141,13 @@ enum LLevel {
 	C,
 	D,
 };
+
+AsyncLogging *g_asyncLog = nullptr;
+
+auto asynOutput(const char *msg, int len) -> void {
+	//cout << "asynOutput" << endl;
+	g_asyncLog->append(msg, len);
+}
 
 int main(int argc, char **argv) {
 	auto a = 9;
@@ -159,7 +188,12 @@ int main(int argc, char **argv) {
 	Date dateV[10];
 	std::reverse(begin(dateV), end(dateV));
 	MoveTest mt;
+	mt.push('a');
+	mt.push('e');
+	mt.push('c');
+	mt.push('i');
 	MoveTest mt2(std::move(mt));
+	mt2.print();
 //	badFunc();
 	Thread thread1(threadFunc, "thread1");
 	thread1.start();
@@ -182,7 +216,7 @@ int main(int argc, char **argv) {
 	cout << "hostName:" << ProcessInfo::hostName() << endl;
 	testnoncopyable na;
 	testnoncopyable nb(move(na));
-	LogFile lf("cxwcfea", 300);
+	//LogFile lf("cxwcfea", 300);
 	int kRPS = 24 * 60 * 60;
 	time_t now = time(nullptr);
 	time_t start = now / kRPS * kRPS;
@@ -190,4 +224,46 @@ int main(int argc, char **argv) {
 	MyClass inMain = getMyClass(1);
 	templateTest("templatetest");
 	LOG_INFO << "ok, this is a info";
+	unique_ptr<MyClass> umy1 = make_unique<MyClass>();
+	if (umy1) {
+		cout << "create umy1 sucess" << endl;
+	}
+	unique_ptr<MyClass> umy2 = move(umy1);
+	if (umy1) {
+		cout << "umy1 still not null" << endl;
+	} else {
+		cout << "umy1 is null" << endl;
+	}
+	if (umy2) {
+		cout << "umy2 is not null" << endl;
+	}
+	umy2.reset();
+	if (umy2) {
+		cout << "after reset umy2 still not null" << endl;
+	} else {
+		cout << "after reset umy2 is null" << endl;
+	}
+	std::vector<char> letters {'o', 'm', 'g', 'w', 't', 'f'};
+
+    if (!letters.empty()) {
+        std::cout << "The last character is: " << letters.back() << '\n';
+    }
+    if (!letters.empty()) {
+        std::cout << "The last character is: " << letters.back() << '\n';
+    }
+    char filename[256];
+    strncpy(filename, argv[0], 256);
+    cxwcfea::AsyncLogging logger { basename(filename), 500*1000*1000, };
+    logger.start();
+    g_asyncLog = &logger;
+    Logger::setOutput(asynOutput);
+    cout << "loglevel:" << Logger::logLevel() << endl;
+    int cnt = 0;
+    string empty = " ";
+	for (int i = 0; i < 1000; ++i) {
+		LOG_INFO << "Hello 0123456789" << " abcdefghijklmnopqrstuvwxyz "
+				<< empty << cnt;
+		++cnt;
+	}
+	cout << "end" << endl;
 }

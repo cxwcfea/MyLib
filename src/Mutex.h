@@ -14,6 +14,7 @@
 namespace cxwcfea {
 
 class Mutex {
+	friend class Condition;
 	pthread_mutex_t mutex_;
 public:
 	Mutex() {

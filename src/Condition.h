@@ -17,27 +17,26 @@ class Condition {
 public:
 	explicit Condition(Mutex &lock) :
 			lock_(lock) {
-		VERIFY(pthread_cond_init(&pcond_, nullptr));
+		VERIFY(pthread_cond_init(&pcond_, nullptr) == 0);
 	}
 
 	~Condition() {
-		VERIFY(pthread_cond_destroy(&pcond_));
+		VERIFY(pthread_cond_destroy(&pcond_) == 0);
 	}
 
 	Condition(const Condition &) = delete;
 	auto operator=(const Condition &) -> Condition & = delete;
 
 	auto wait() -> void {
-		lock_.lock();
-		VERIFY(pthread_cond_wait(&pcond_, lock_.getPthreadMutex()));
+		VERIFY(pthread_cond_wait(&pcond_, lock_.getPthreadMutex()) == 0);
 	}
 
 	auto notify() -> void {
-		VERIFY(pthread_cond_signal(&pcond_));
+		VERIFY(pthread_cond_signal(&pcond_) == 0);
 	}
 
 	auto notifyAll() -> void {
-		VERIFY(pthread_cond_broadcast(&pcond_));
+		VERIFY(pthread_cond_broadcast(&pcond_) == 0);
 	}
 
 	auto waitForSeconds(int seconds) -> bool;

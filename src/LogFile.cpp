@@ -13,7 +13,7 @@ namespace cxwcfea {
 
 LogFile::LogFile(const string &basename, size_t rollSize, bool threadSafe,
 		int flushInterval) :
-		basename_("basename"), rollSize_(rollSize), flushInterval_(
+		basename_(basename), rollSize_(rollSize), flushInterval_(
 				flushInterval), count_(0), mutex_(
 				threadSafe ? new Mutex : nullptr), startOfPeriod_(0), lastRoll_(
 				0), lastFlush_(0) {

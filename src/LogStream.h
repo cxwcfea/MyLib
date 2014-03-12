@@ -22,7 +22,7 @@ template<int SIZE>
 class FixedBuffer {
 public:
 	FixedBuffer() :
-			cur_(data_) {
+		cur_(data_) {
 	}
 	~FixedBuffer() = default;
 
@@ -114,6 +114,7 @@ public:
 		return *this;
 	}
 	LogStream &operator<<(const char *v) {
+//		std::cout << "log output const char *" << std::endl;
 		buffer_.append(v, strlen(v));
 		return *this;
 	}
