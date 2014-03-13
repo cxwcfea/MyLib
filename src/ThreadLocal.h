@@ -22,6 +22,9 @@ public:
 		pthread_key_delete(pkey_);
 	}
 
+	ThreadLocal(const ThreadLocal &) = delete;
+	auto operator=(const ThreadLocal &) -> ThreadLocal & = delete;
+
 	auto value() -> T& {
 		T* perThreadValue = static_cast<T*>(pthread_getspecific(pkey_));
 		if (!perThreadValue) {
