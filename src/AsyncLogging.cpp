@@ -90,14 +90,14 @@ auto AsyncLogging::threadFunc() -> void {
 		if (!newBuffer1) {
 			ASSERT(!buffersToWrite.empty());
 			newBuffer1 = std::move(buffersToWrite.back());
-//			buffersToWrite.back();
-			newBuffer1.reset();
+			buffersToWrite.pop_back();
+			newBuffer1->reset();
 		}
 		if (!newBuffer2) {
 			ASSERT(!buffersToWrite.empty());
 			newBuffer1 = std::move(buffersToWrite.back());
-//			buffersToWrite.back();
-			newBuffer1.reset();
+			buffersToWrite.pop_back();
+			newBuffer1->reset();
 		}
 		buffersToWrite.clear();
 		output.flush();

@@ -253,17 +253,24 @@ int main(int argc, char **argv) {
     }
     char filename[256];
     strncpy(filename, argv[0], 256);
-    cxwcfea::AsyncLogging logger { basename(filename), 500*1000*1000, };
+    cxwcfea::AsyncLogging logger { basename(filename), 1000*1000, };
     logger.start();
     g_asyncLog = &logger;
     Logger::setOutput(asynOutput);
     cout << "loglevel:" << Logger::logLevel() << endl;
     int cnt = 0;
     string empty = " ";
-	for (int i = 0; i < 1000; ++i) {
-		LOG_INFO << "Hello 0123456789" << " abcdefghijklmnopqrstuvwxyz "
-				<< empty << cnt;
-		++cnt;
+	for (int t = 0; t < 30; ++t) {
+		Timestamp start = Timestamp::now();
+		for (int i = 0; i < 1000; ++i) {
+			LOG_INFO << "Hello 0123456789" << " abcdefghijklmnopqrstuvwxyz "
+					<< empty << cnt;
+			++cnt;
+		}
+		Timestamp end = Timestamp::now();
+		printf("%f\n", timeDifferenceInSeconds(end, start)/1000);
+		struct timespec tm = { 0, 500 * 1000 * 1000 };
+		nanosleep(&tm, nullptr);
 	}
 	cout << "end" << endl;
 }
