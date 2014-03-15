@@ -155,7 +155,6 @@ auto Thread::start() -> void {
 	if (pthread_create(&threadId_, nullptr, &detail::startThread, data)) {
 		started_ = false;
 		delete data;
-		//TODO: use log func
 		LOG_SYSFATAL << "Failed in pthread_create";
 	}
 }

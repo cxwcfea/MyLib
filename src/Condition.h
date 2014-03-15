@@ -28,6 +28,7 @@ public:
 	auto operator=(const Condition &) -> Condition & = delete;
 
 	auto wait() -> void {
+		Mutex::UnassignGuard ug(lock_);
 		VERIFY(pthread_cond_wait(&pcond_, lock_.getPthreadMutex()) == 0);
 	}
 
