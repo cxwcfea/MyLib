@@ -16,6 +16,7 @@
 #include "LogFile.h"
 #include "Logging.h"
 #include "AsyncLogging.h"
+#include "WeakCallback.h"
 #ifdef __MACH__
 #include <libgen.h>  // basename()
 #endif
@@ -149,6 +150,13 @@ auto asynOutput(const char *msg, int len) -> void {
 	g_asyncLog->append(msg, len);
 }
 
+class WeakCallbackTest {
+public:
+	void theCallback(int a, string b) {
+		cout << "a is " << a << " b is " << b << endl;
+	}
+};
+
 int main(int argc, char **argv) {
 	auto a = 9;
 	TRACEOUT("Start %d\n", a);
@@ -273,4 +281,7 @@ int main(int argc, char **argv) {
 		nanosleep(&tm, nullptr);
 	}
 	cout << "end" << endl;
+	shared_ptr<WeakCallbackTest> wct_p = make_shared<WeakCallbackTest>();
+	auto callback = makeWeakCallback(wct_p, &WeakCallbackTest::theCallback);
+	callback(8, "ok");
 }
